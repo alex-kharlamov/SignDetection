@@ -51,8 +51,8 @@ def find_empty_bbox(bboxes, img_size):
 
 
 def crop_image(image, bbox):
-    padding_x = int(image.size[0] / 100. * PADDING_PERCENT)
-    padding_y = int(image.size[1] / 100. * PADDING_PERCENT)
+    padding_x = int((bbox[2] - bbox[0]) / 100. * PADDING_PERCENT)
+    padding_y = int((bbox[3] - bbox[1]) / 100. * PADDING_PERCENT)
     bbox = [bbox[0] - padding_x, bbox[1] - padding_y, bbox[2] + padding_x, bbox[3] + padding_y]
     bbox[0] = max(bbox[0], 0)
     bbox[1] = max(bbox[1], 0)
