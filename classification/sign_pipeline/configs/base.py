@@ -2,17 +2,18 @@ import torch.nn as nn
 import torch.optim as optim
 from torchvision.transforms import ToTensor
 
-from sign_pipeline.dataset import SignImagesDataset, SignTargetsDataset
-from pipeline.config_base import ConfigBase
+from pipeline.config_base import ConfigBase, PredictConfigBase
 from pipeline.datasets.base import DatasetWithPostprocessingFunc, DatasetComposer, OneHotTargetsDataset
 from pipeline.datasets.mixup import MixUpDatasetWrapper
 from pipeline.losses.vector_cross_entropy import VectorCrossEntropy
 from pipeline.metrics.accuracy import MetricsCalculatorAccuracy
+from pipeline.predictors.classification import PredictorClassification
 from pipeline.schedulers.learning_rate.reduce_on_plateau import SchedulerWrapperLossOnPlateau
 from pipeline.trainers.classification import TrainerClassification
+from sign_pipeline.dataset import SignImagesDataset, SignTargetsDataset
 
 TRAIN_DATASET_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/full_russia_vmk"
-TEST_DATASET_PATH = "~/.pipeline/cifar/test"
+TEST_DATASET_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/final_val"
 
 LABELS_MAPPING_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/labels_mapping"
 TRAIN_LOAD_SIZE = 256
@@ -92,3 +93,23 @@ class ConfigSignBase(ConfigBase):
             print_frequency=print_frequency,
             epoch_count=epoch_count,
             device=device)
+
+
+class PredictConfigSignBase(PredictConfigBase):
+    def __init__(self, model, model_save_path, num_workers=4, batch_size=128):
+        predictor_cls = PredictorClassification
+
+        images_dataset = DatasetWithPostprocessingFunc(
+            SignImagesDataset(path=TEST_DATASET_PATH, labels_mapping_path=LABELS_MAPPING_PATH,
+                              load_size=TEST_LOAD_SIZE, crop_size=TEST_CROP_SIZE),
+            ToTensor())
+
+        dataset = DatasetComposer([images_dataset, list(range(len(images_dataset)))])
+
+        super().__init__(
+            model=model,
+            model_save_path=model_save_path,
+            dataset=dataset,
+            predictor_cls=predictor_cls,
+            num_workers=num_workers,
+            batch_size=batch_size)

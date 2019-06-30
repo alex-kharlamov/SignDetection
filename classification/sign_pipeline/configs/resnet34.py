@@ -6,7 +6,7 @@ import torch.nn as nn
 from torchvision.models.resnet import resnet34
 from torchvision.transforms import ToTensor
 
-from .base import ConfigSignBase, NUM_CLASSES
+from .base import ConfigSignBase, PredictConfigSignBase, NUM_CLASSES
 
 MODEL_SAVE_PATH = "models/sign_resnet34"
 BATCH_SIZE = 128
@@ -33,3 +33,8 @@ class Config(ConfigSignBase):
             epoch_count=30,
             batch_size=BATCH_SIZE,
             transforms=transforms)
+
+
+class PredictConfig(PredictConfigSignBase):
+    def __init__(self):
+        super().__init__(model=get_model(), model_save_path=MODEL_SAVE_PATH, batch_size=BATCH_SIZE)

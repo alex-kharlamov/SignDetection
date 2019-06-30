@@ -1,7 +1,7 @@
-import torch.utils.data as data
-import torch
-
 from typing import Sequence
+
+import torch
+import torch.utils.data as data
 
 
 class EmptyDataset(data.Dataset):

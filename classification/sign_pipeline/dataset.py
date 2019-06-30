@@ -1,7 +1,7 @@
 import pickle
 
 import torch.utils.data as data
-from torchvision.transforms import Compose, Resize, RandomCrop, ToTensor
+from torchvision.transforms import Compose, Resize, RandomCrop
 
 
 class SignDataset(data.Dataset):
