@@ -11,14 +11,17 @@ from pipeline.metrics.accuracy import MetricsCalculatorAccuracy
 from pipeline.schedulers.learning_rate.reduce_on_plateau import SchedulerWrapperLossOnPlateau
 from pipeline.trainers.classification import TrainerClassification
 
-TRAIN_DATASET_PATH = "~/.pipeline/cifar/train"
+TRAIN_DATASET_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/full_russia_vmk"
 TEST_DATASET_PATH = "~/.pipeline/cifar/test"
-LABELS_MAPPING_PATH = ""
+
+LABELS_MAPPING_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/labels_mapping"
 TRAIN_LOAD_SIZE = 256
 TRAIN_CROP_SIZE = 224
 
 TEST_LOAD_SIZE = 224
 TEST_CROP_SIZE = 224
+
+NUM_CLASSES = 164
 
 
 def get_dataset(path, transforms, train, use_mixup):
