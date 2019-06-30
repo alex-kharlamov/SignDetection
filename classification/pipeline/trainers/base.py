@@ -1,18 +1,17 @@
+import os
 import time
 from typing import Iterable
 
 import torch
 import torch.nn as nn
-from torch.optim import Optimizer
+from torch.optim.optimizer import Optimizer
 
+from pipeline.schedulers.base import SchedulerWrapperMetricsMeanBase, SchedulerWrapperBase
 from ..core import PipelineError
 from ..logger import LOGGER
 from ..metrics.base import MetricsCalculatorBase
-from pipeline.schedulers.base import SchedulerWrapperMetricsMeanBase, SchedulerWrapperBase
 from ..storage.state import StateStorageBase
 from ..utils import move_to_device, save_model, load_model
-
-import os
 
 
 class TrainerBase:
@@ -22,6 +21,7 @@ class TrainerBase:
             train_data_loader: Iterable,
             val_data_loader: Iterable,
             epoch_count: int,
+            max_epoch_length: int or None,
             optimizer: Optimizer,
             scheduler: SchedulerWrapperBase,
             loss: nn.Module,
@@ -35,6 +35,7 @@ class TrainerBase:
         self.train_data_loader = train_data_loader
         self.val_data_loader = val_data_loader
         self.epoch_count = epoch_count
+        self.max_epoch_length = max_epoch_length
         self.optimizer = optimizer
         self.scheduler = scheduler
         self.loss = loss
@@ -97,6 +98,7 @@ class TrainerBase:
         start_time = time.time()
         mean_loss = 0
         step_count = 0
+        total_samples = 0
 
         for step_id, (input_data, target) in enumerate(self.train_data_loader):
             loss = self.train_step(input_data, target)
@@ -106,6 +108,11 @@ class TrainerBase:
             step_count += 1
 
             self.log_train_step(epoch_id, step_id, epoch_time, loss, mean_loss / step_count)
+
+            total_samples += target.shape[0]
+
+            if self.max_epoch_length is not None and total_samples >= self.max_epoch_length:
+                break
 
         epoch_time = time.time() - start_time
         mean_loss /= max(step_count, 1)

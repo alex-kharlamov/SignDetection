@@ -24,6 +24,7 @@ class ConfigBase:
             batch_size=1,
             num_workers=0,
             epoch_count=None,
+            max_epoch_length=None,
             print_frequency=1,
             state_storage=None):
 
@@ -53,6 +54,7 @@ class ConfigBase:
         self.loss = loss
         self.optimizer = optimizer
         self.epoch_count = epoch_count
+        self.max_epoch_length = max_epoch_length
         self.print_frequency = print_frequency
         self.trainer_cls = trainer_cls
         self.device = device

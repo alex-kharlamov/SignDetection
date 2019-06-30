@@ -24,6 +24,8 @@ TEST_CROP_SIZE = 224
 
 NUM_CLASSES = 164
 
+MAX_EPOCH_LENGTH = 10000
+
 
 def get_dataset(path, transforms, train, use_mixup):
     load_size = TRAIN_LOAD_SIZE if train else TEST_LOAD_SIZE
@@ -92,6 +94,7 @@ class ConfigSignBase(ConfigBase):
             trainer_cls=trainer_cls,
             print_frequency=print_frequency,
             epoch_count=epoch_count,
+            max_epoch_length=MAX_EPOCH_LENGTH,
             device=device)
 
 

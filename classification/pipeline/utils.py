@@ -82,6 +82,7 @@ def run_train(config):
         train_data_loader=train_data_loader,
         val_data_loader=val_data_loader,
         epoch_count=config.epoch_count,
+        max_epoch_length=config.max_epoch_length,
         optimizer=config.optimizer,
         scheduler=config.scheduler,
         loss=config.loss,
