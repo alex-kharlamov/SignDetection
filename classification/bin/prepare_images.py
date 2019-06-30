@@ -4,6 +4,7 @@ import random
 
 import joblib
 from PIL import Image
+import os
 
 NUM_EMPTY = 1
 EMPTY_LABEL_ID = -1
@@ -97,7 +98,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("annotations_path")
     parser.add_argument("output_path")
-    parser.add_argument("output_path_labels_mapping")
+    parser.add_argument("path_labels_mapping")
 
     args = parser.parse_args()
 
@@ -107,7 +108,12 @@ def main():
     p = joblib.Parallel(n_jobs=N_JOBS, backend="multiprocessing", verbose=5)
     extracted_annotations = p(joblib.delayed(extract_annotations)(annotation) for annotation in annotations)
     result = []
-    labels_mapping = {}
+    
+    if os.path.exists(args.path_labels_mapping):
+        with open(args.path_labels_mapping, "rb") as fin:
+            labels_mapping = pickle.load(fin)
+    else:
+        labels_mapping = {}
 
     for annotation in extracted_annotations:
         result += annotation
@@ -119,7 +125,7 @@ def main():
     with open(args.output_path, "wb") as fout:
         pickle.dump(result, fout)
 
-    with open(args.output_path_labels_mapping, "wb") as fout:
+    with open(args.path_labels_mapping, "wb") as fout:
         pickle.dump(labels_mapping, fout)
 
 
