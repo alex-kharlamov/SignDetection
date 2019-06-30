@@ -1,15 +1,16 @@
 import argparse
 import pickle
-
-import tqdm
-from PIL import Image
 import random
+
+import joblib
+from PIL import Image
 
 NUM_EMPTY = 1
 EMPTY_LABEL_ID = -1
 EMPTY_MIN_SIZE = 20
 EMPTY_MAX_SIZE = 100
 MAX_FIND_EMPTY_BBOX_ITER = 10
+N_JOBS = 16
 
 
 def is_bounding_boxes_intersect(bbox_one, bbox_second):
@@ -51,6 +52,38 @@ def crop_image(image, bbox):
     return image.crop(bbox)
 
 
+def extract_annotations(annotation):
+    result = []
+    image = Image.open(annotation["filename"]).convert("RGB")
+
+    bboxes = annotation["ann"]["bboxes"]
+    labels = annotation["ann"]["labels"]
+
+    for bbox, label in zip(bboxes, labels):
+        data = {
+            "bbox": bbox,
+            "label": label,
+            "cropped_image": crop_image(image, bbox)
+        }
+
+        result.append(data)
+
+    for _ in range(NUM_EMPTY):
+        bbox = find_empty_bbox(bboxes, image.size)
+        if bbox is None:
+            break
+
+        data = {
+            "bbox": bbox,
+            "label": EMPTY_LABEL_ID,
+            "cropped_image": crop_image(image, bbox)
+        }
+
+        result.append(data)
+
+    return result
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("annotations_path")
@@ -61,38 +94,12 @@ def main():
     with open(args.annotations_path, "rb") as fin:
         annotations = pickle.load(fin)
 
+    p = joblib.Parallel(n_jobs=N_JOBS, backend="multiprocessing", verbose=5)
+    extracted_annotations = p(joblib.delayed(extract_annotations)(annotation) for annotation in annotations)
     result = []
 
-    for annotation in tqdm.tqdm(annotations):
-        image = Image.open(annotation["filename"]).convert("RGB")
-
-        bboxes = annotation["ann"]["bboxes"]
-        labels = annotation["ann"]["labels"]
-
-        for bbox, label in zip(bboxes, labels):
-            data = {
-                "bbox": bbox,
-                "label": label,
-                "cropped_image": crop_image(image, bbox)
-            }
-
-            result.append(data)
-
-        for _ in range(NUM_EMPTY):
-            bbox = find_empty_bbox(bboxes, image.size)
-            if bbox is None:
-                break
-
-            data = {
-                "bbox": bbox,
-                "label": EMPTY_LABEL_ID,
-                "cropped_image": crop_image(image, bbox)
-            }
-
-            result.append(data)
-
-        if len(result) > 1000:
-            break
+    for annotation in extracted_annotations:
+        result += annotation
 
     with open(args.output_path, "wb") as fout:
         pickle.dump(result, fout)
