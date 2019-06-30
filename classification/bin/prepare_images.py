@@ -11,6 +11,7 @@ EMPTY_MIN_SIZE = 20
 EMPTY_MAX_SIZE = 100
 MAX_FIND_EMPTY_BBOX_ITER = 10
 N_JOBS = 16
+PADDING_PERCENT = 10
 
 
 def is_bounding_boxes_intersect(bbox_one, bbox_second):
@@ -49,6 +50,14 @@ def find_empty_bbox(bboxes, img_size):
 
 
 def crop_image(image, bbox):
+    padding_x = int(image.size[0] / 100. * PADDING_PERCENT)
+    padding_y = int(image.size[1] / 100. * PADDING_PERCENT)
+    bbox = [bbox[0] - padding_x, bbox[1] - padding_y, bbox[2] + padding_x, bbox[3] + padding_y]
+    bbox[0] = max(bbox[0], 0)
+    bbox[1] = max(bbox[1], 0)
+    bbox[2] = min(bbox[2], image.size[0])
+    bbox[3] = min(bbox[3], image.size[1])
+
     return image.crop(bbox)
 
 
@@ -88,6 +97,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("annotations_path")
     parser.add_argument("output_path")
+    parser.add_argument("output_path_labels_mapping")
 
     args = parser.parse_args()
 
@@ -97,12 +107,20 @@ def main():
     p = joblib.Parallel(n_jobs=N_JOBS, backend="multiprocessing", verbose=5)
     extracted_annotations = p(joblib.delayed(extract_annotations)(annotation) for annotation in annotations)
     result = []
+    labels_mapping = {}
 
     for annotation in extracted_annotations:
         result += annotation
 
+        for ann in annotation:
+            if ann["label"] not in labels_mapping:
+                labels_mapping[ann["label"]] = len(labels_mapping)
+
     with open(args.output_path, "wb") as fout:
         pickle.dump(result, fout)
+
+    with open(args.output_path_labels_mapping, "wb") as fout:
+        pickle.dump(labels_mapping, fout)
 
 
 if __name__ == "__main__":

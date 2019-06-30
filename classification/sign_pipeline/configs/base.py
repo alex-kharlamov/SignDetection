@@ -2,7 +2,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torchvision.transforms import ToTensor
 
-from cifar_pipeline.dataset import CIFARImagesDataset, CIFARTargetsDataset
+from sign_pipeline.dataset import SignImagesDataset, SignTargetsDataset
 from pipeline.config_base import ConfigBase
 from pipeline.datasets.base import DatasetWithPostprocessingFunc, DatasetComposer, OneHotTargetsDataset
 from pipeline.datasets.mixup import MixUpDatasetWrapper
@@ -13,28 +13,49 @@ from pipeline.trainers.classification import TrainerClassification
 
 TRAIN_DATASET_PATH = "~/.pipeline/cifar/train"
 TEST_DATASET_PATH = "~/.pipeline/cifar/test"
+LABELS_MAPPING_PATH = ""
+TRAIN_LOAD_SIZE = 256
+TRAIN_CROP_SIZE = 224
+
+TEST_LOAD_SIZE = 224
+TEST_CROP_SIZE = 224
 
 
 def get_dataset(path, transforms, train, use_mixup):
+    load_size = TRAIN_LOAD_SIZE if train else TEST_LOAD_SIZE
+    crop_size = TRAIN_CROP_SIZE if train else TEST_CROP_SIZE
+
     images_dataset = DatasetWithPostprocessingFunc(
-        CIFARImagesDataset(path=path, train=train, download=True),
+        SignImagesDataset(path=path, labels_mapping_path=LABELS_MAPPING_PATH,
+                          load_size=load_size, crop_size=crop_size),
         transforms)
 
-    targets_dataset = CIFARTargetsDataset(path=path, train=train)
+    targets_dataset = SignTargetsDataset(path=path, labels_mapping_path=LABELS_MAPPING_PATH,
+                                         load_size=load_size, crop_size=crop_size)
     if use_mixup:
-        targets_dataset = OneHotTargetsDataset(targets_dataset, 10)
+        targets_dataset = OneHotTargetsDataset(targets_dataset, targets_dataset.get_class_count())
 
     return DatasetComposer([images_dataset, targets_dataset])
 
 
-class ConfigCIFARBase(ConfigBase):
-    def __init__(self, model, model_save_path, num_workers=8, batch_size=128, transforms=None,
-                 epoch_count=200, print_frequency=10, mixup_alpha=0):
-        optimizer = optim.SGD(
-            model.parameters(),
-            lr=0.1,
-            momentum=0.9,
-            weight_decay=5e-4)
+class ConfigSignBase(ConfigBase):
+    def __init__(
+            self,
+            model,
+            model_save_path,
+            num_workers=8,
+            batch_size=128,
+            transforms=None,
+            epoch_count=200,
+            print_frequency=10,
+            mixup_alpha=0,
+            optimizer=None,
+            device="cuda:0",
+    ):
+        if optimizer is None:
+            optimizer = optim.Adam(
+                model.parameters(),
+                lr=1e-4)
 
         scheduler = SchedulerWrapperLossOnPlateau(optimizer)
         loss = nn.CrossEntropyLoss()
@@ -67,4 +88,4 @@ class ConfigCIFARBase(ConfigBase):
             trainer_cls=trainer_cls,
             print_frequency=print_frequency,
             epoch_count=epoch_count,
-            device="cpu")
+            device=device)
