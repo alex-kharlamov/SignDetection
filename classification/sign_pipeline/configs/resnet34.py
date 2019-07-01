@@ -28,7 +28,7 @@ class Config(ConfigSignBase):
         model = get_model()
         train_transforms = Compose([
             RandomAffine(degrees=20, scale=(0.8, 1.1)),
-            RandomHorizontalFlip(),
+            #RandomHorizontalFlip(),
             ToTensor(),
             Normalize((0.5, 0.5, 0.5), (0.2, 0.2, 0.2))
         ])
