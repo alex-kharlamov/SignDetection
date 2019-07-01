@@ -26,8 +26,8 @@ def sample_empty_bbox(img_size):
     x_side = random.randint(EMPTY_MIN_SIZE, EMPTY_MAX_SIZE)
     y_side = random.randint(EMPTY_MIN_SIZE, EMPTY_MAX_SIZE)
 
-    x_start = random.randint(0, img_size[0] - x_side - 1)
-    y_start = random.randint(0, img_size[1] - y_side - 1)
+    x_start = random.randint(0, img_size[1] - x_side - 1)
+    y_start = random.randint(0, img_size[0] - y_side - 1)
 
     return [x_start, y_start, x_start + x_side, y_start + y_side]
 
@@ -59,7 +59,7 @@ def crop_image(image, bbox):
     bbox[2] = min(bbox[2], image.size[0])
     bbox[3] = min(bbox[3], image.size[1])
 
-    return image.crop([bbox[1], bbox[0], bbox[3], bbox[2]])
+    return image.crop(bbox)
 
 
 def extract_annotations(annotation):
