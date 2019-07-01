@@ -13,6 +13,9 @@ from pipeline.trainers.classification import TrainerClassification
 from sign_pipeline.dataset import SignImagesDataset, SignTargetsDataset
 
 TRAIN_DATASET_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/first_part_skolkovo"
+TRAIN_DATASET_PATH_VMK = "/group-volume/orc_srr/multimodal/iceblood/classification/full_russia_vmk"
+TRAIN_DATASET_PATH_MERGED = "/group-volume/orc_srr/multimodal/iceblood/classification/merged"
+
 TEST_DATASET_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/final_skolkovo"
 
 LABELS_MAPPING_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/labels_mapping"
@@ -49,6 +52,7 @@ class ConfigSignBase(ConfigBase):
             self,
             model,
             model_save_path,
+            train_dataset_path=TRAIN_DATASET_PATH,
             num_workers=8,
             batch_size=128,
             train_transforms=None,
@@ -69,7 +73,7 @@ class ConfigSignBase(ConfigBase):
         metrics_calculator = MetricsCalculatorAccuracy()
         trainer_cls = TrainerClassification
 
-        train_dataset = get_dataset(path=TRAIN_DATASET_PATH, transforms=train_transforms, train=True,
+        train_dataset = get_dataset(path=train_dataset_path, transforms=train_transforms, train=True,
                                     use_mixup=mixup_alpha > 0)
         val_dataset = get_dataset(path=TEST_DATASET_PATH, transforms=val_transforms, train=False,
                                   use_mixup=mixup_alpha > 0)
