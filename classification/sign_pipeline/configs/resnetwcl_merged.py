@@ -10,7 +10,7 @@ from .base import ConfigSignBase, PredictConfigSignBase, NUM_CLASSES, TRAIN_DATA
 from itertools import chain
 
 MODEL_SAVE_PATH = "models/sign_resnetwcl_merged"
-BATCH_SIZE = 128
+BATCH_SIZE = 64
 
 SEED = 85
 random.seed(SEED)
