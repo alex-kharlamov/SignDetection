@@ -51,7 +51,8 @@ class ConfigSignBase(ConfigBase):
             model_save_path,
             num_workers=8,
             batch_size=128,
-            transforms=None,
+            train_transforms=None,
+            val_transforms=None,
             epoch_count=200,
             print_frequency=10,
             mixup_alpha=0,
@@ -63,17 +64,14 @@ class ConfigSignBase(ConfigBase):
                 model.parameters(),
                 lr=1e-4)
 
-        scheduler = SchedulerWrapperLossOnPlateau(optimizer)
+        scheduler = SchedulerWrapperLossOnPlateau(optimizer, patience=2)
         loss = nn.CrossEntropyLoss()
         metrics_calculator = MetricsCalculatorAccuracy()
         trainer_cls = TrainerClassification
 
-        if transforms is None:
-            transforms = ToTensor()
-
-        train_dataset = get_dataset(path=TRAIN_DATASET_PATH, transforms=transforms, train=True,
+        train_dataset = get_dataset(path=TRAIN_DATASET_PATH, transforms=train_transforms, train=True,
                                     use_mixup=mixup_alpha > 0)
-        val_dataset = get_dataset(path=TEST_DATASET_PATH, transforms=transforms, train=False,
+        val_dataset = get_dataset(path=TEST_DATASET_PATH, transforms=val_transforms, train=False,
                                   use_mixup=mixup_alpha > 0)
 
         if mixup_alpha > 0:

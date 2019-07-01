@@ -4,7 +4,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 from torchvision.models.resnet import resnet34
-from torchvision.transforms import ToTensor
+from torchvision.transforms import ToTensor, Normalize, Compose, RandomAffine, RandomHorizontalFlip
 
 from .base import ConfigSignBase, PredictConfigSignBase, NUM_CLASSES
 
@@ -26,13 +26,26 @@ def get_model():
 class Config(ConfigSignBase):
     def __init__(self):
         model = get_model()
-        transforms = ToTensor()
+        train_transforms = Compose([
+            RandomAffine(degrees=20, scale=(0.8, 1.1)),
+            RandomHorizontalFlip(),
+            ToTensor(),
+            Normalize((0.5, 0.5, 0.5), (0.2, 0.2, 0.2))
+        ])
+
+        val_transforms = Compose([
+            ToTensor(),
+            Normalize((0.5, 0.5, 0.5), (0.2, 0.2, 0.2))
+        ])
+
         super().__init__(
             model=model,
             model_save_path=MODEL_SAVE_PATH,
-            epoch_count=30,
+            epoch_count=100,
             batch_size=BATCH_SIZE,
-            transforms=transforms)
+            train_transforms=train_transforms,
+            val_transforms=val_transforms,
+            mixup_alpha=0.5)
 
 
 class PredictConfig(PredictConfigSignBase):
