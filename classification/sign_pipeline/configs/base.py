@@ -12,17 +12,17 @@ from pipeline.schedulers.learning_rate.reduce_on_plateau import SchedulerWrapper
 from pipeline.trainers.classification import TrainerClassification
 from sign_pipeline.dataset import SignImagesDataset, SignTargetsDataset
 
-TRAIN_DATASET_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/full_russia_vmk"
-TEST_DATASET_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/final_val"
+TRAIN_DATASET_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/first_part_skolkovo"
+TEST_DATASET_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/final_skolkovo"
 
 LABELS_MAPPING_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/labels_mapping"
-TRAIN_LOAD_SIZE = 256
-TRAIN_CROP_SIZE = 224
+TRAIN_LOAD_SIZE = 128 + 6
+TRAIN_CROP_SIZE = 128
 
-TEST_LOAD_SIZE = 224
-TEST_CROP_SIZE = 224
+TEST_LOAD_SIZE = 128
+TEST_CROP_SIZE = 128
 
-NUM_CLASSES = 165
+NUM_CLASSES = 133
 
 MAX_EPOCH_LENGTH = 10000
 
