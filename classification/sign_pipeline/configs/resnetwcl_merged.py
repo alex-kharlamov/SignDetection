@@ -30,21 +30,22 @@ class Config(ConfigSignBase):
         train_transforms = Compose([
             RandomAffine(degrees=20, scale=(0.8, 1.1)),
             ToTensor(),
-            Normalize((0.5, 0.5, 0.5), (0.2, 0.2, 0.2))
+            Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
         ])
 
         val_transforms = Compose([
             ToTensor(),
-            Normalize((0.5, 0.5, 0.5), (0.2, 0.2, 0.2))
+            Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
         ])
 
         optimizer = optim.Adam(
-            chain(
-                model.layer2.parameters(),
-                model.layer3.parameters(),
-                model.layer4.parameters(),
-                model.fc.parameters()
-            ),
+            # chain(
+            #     model.layer2.parameters(),
+            #     model.layer3.parameters(),
+            #     model.layer4.parameters(),
+            #     model.fc.parameters()
+            # ),
+            model.parameters(),
             lr=1e-4)
 
         super().__init__(
@@ -56,7 +57,7 @@ class Config(ConfigSignBase):
             batch_size=BATCH_SIZE,
             train_transforms=train_transforms,
             val_transforms=val_transforms,
-            mixup_alpha=0.5)
+            mixup_alpha=0.4)
 
 
 class PredictConfig(PredictConfigSignBase):
