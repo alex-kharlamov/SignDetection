@@ -1,12 +1,12 @@
 import random
 
+import imgaug.augmenters as iaa
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torchvision.transforms import ToTensor, Normalize, Compose, RandomAffine
-import imgaug.augmenters as iaa
 from PIL import Image
+from torchvision.transforms import ToTensor, Normalize, Compose, RandomAffine
 
 from pipeline.schedulers.learning_rate.reduce_on_plateau import SchedulerWrapperLossOnPlateau
 from .base import ConfigSignBase, PredictConfigSignBase, NUM_CLASSES, TRAIN_DATASET_PATH_MERGED
