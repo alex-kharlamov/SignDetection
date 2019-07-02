@@ -24,17 +24,26 @@ def get_model():
     model.fc = nn.Linear(model.fc.in_features, NUM_CLASSES)
     return model
 
+class ImgAugTransforms:
+    def __init__(self):
+        self._seq = iaa.Sequential([
+            iaa.Sharpen(alpha=(0, 1.0), lightness=(0.75, 1.5)),
+            iaa.Emboss(alpha=(0, 1.0), strength=(0, 2.0)),
+            iaa.AdditiveGaussianNoise(loc=0, scale=(0.0, 0.05 * 255), per_channel=0.5),
+            iaa.Invert(0.05, per_channel=True),
+            iaa.ContrastNormalization((0.5, 2.0), per_channel=0.5),
+        ])
+
+    def __call__(self, image):
+        return self._seq.augment_image(image)
+
 
 class Config(ConfigSignBase):
     def __init__(self):
         model = get_model()
         train_transforms = Compose([
             RandomAffine(degrees=20, scale=(0.8, 1.1)),
-            iaa.Sharpen(alpha=(0, 1.0), lightness=(0.75, 1.5)),
-            iaa.Emboss(alpha=(0, 1.0), strength=(0, 2.0)),
-            iaa.AdditiveGaussianNoise(loc=0, scale=(0.0, 0.05 * 255), per_channel=0.5),
-            iaa.Invert(0.05, per_channel=True),
-            iaa.ContrastNormalization((0.5, 2.0), per_channel=0.5),
+            ImgAugTransforms(),
             ToTensor(),
             Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
         ])
