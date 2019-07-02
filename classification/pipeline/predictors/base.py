@@ -47,7 +47,7 @@ class PredictorBase:
     def load_last_model(self):
         if os.path.exists(self.model_save_path):
             epochs = filter(lambda file: file.startswith("epoch_"), os.listdir(self.model_save_path))
-            epochs = map(lambda file: int(file[file.find("_") + 1]), epochs)
+            epochs = map(lambda file: int(file[file.find("_") + 1:]), epochs)
             epochs = list(epochs)
 
             if epochs:
