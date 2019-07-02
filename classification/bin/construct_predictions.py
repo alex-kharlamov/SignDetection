@@ -2,6 +2,8 @@ import argparse
 import torch
 import pickle
 
+EMPTY_LABEL_ID = -1
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -33,6 +35,10 @@ def main():
         probability = float(prediction.max())
 
         label = labels_reverse_mapping[label_id]
+
+        if label == EMPTY_LABEL_ID:
+            continue
+
         result.append([info["filename"], info["bbox"], label, probability])
 
     with open(args.output_path, "wb") as fout:
