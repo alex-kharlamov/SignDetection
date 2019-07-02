@@ -62,13 +62,15 @@ class ConfigSignBase(ConfigBase):
             mixup_alpha=0,
             optimizer=None,
             device="cuda:0",
+            scheduler=None,
     ):
         if optimizer is None:
             optimizer = optim.Adam(
                 model.parameters(),
                 lr=1e-4)
 
-        scheduler = SchedulerWrapperLossOnPlateau(optimizer, patience=2)
+        if scheduler is None:
+            scheduler = SchedulerWrapperLossOnPlateau(optimizer, patience=2)
         loss = nn.CrossEntropyLoss()
         metrics_calculator = MetricsCalculatorAccuracy()
         trainer_cls = TrainerClassification
