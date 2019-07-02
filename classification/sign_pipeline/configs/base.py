@@ -1,6 +1,6 @@
 import torch.nn as nn
 import torch.optim as optim
-from torchvision.transforms import ToTensor
+from torchvision.transforms import ToTensor, Compose, Normalize
 
 from pipeline.config_base import ConfigBase, PredictConfigBase
 from pipeline.datasets.base import DatasetWithPostprocessingFunc, DatasetComposer, OneHotTargetsDataset
@@ -109,7 +109,7 @@ class PredictConfigSignBase(PredictConfigBase):
         images_dataset = DatasetWithPostprocessingFunc(
             SignImagesDataset(path=TEST_DATASET_PATH, labels_mapping_path=LABELS_MAPPING_PATH,
                               load_size=TEST_LOAD_SIZE, crop_size=TEST_CROP_SIZE),
-            ToTensor())
+            Compose([ToTensor(), Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))]))
 
         dataset = DatasetComposer([images_dataset, list(range(len(images_dataset)))])
 
