@@ -15,7 +15,7 @@ def extract_bboxes(annotation, bboxes):
     result = []
     image = Image.open(annotation["filename"]).convert("RGB")
 
-    for bbox in bboxes:
+    for bbox in bboxes[0]:
         if len(bbox) == 0:
             continue
         bbox = [int(bbox[0]), int(bbox[1]), int(bbox[2]), int(bbox[3])]
