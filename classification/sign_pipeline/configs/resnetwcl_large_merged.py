@@ -12,7 +12,7 @@ from pipeline.schedulers.learning_rate.reduce_on_plateau import SchedulerWrapper
 from .base import ConfigSignBase, PredictConfigSignBase, NUM_CLASSES, TRAIN_DATASET_PATH_MERGED
 
 MODEL_SAVE_PATH = "models/sign_resnetwcl_large_merged"
-BATCH_SIZE = 64
+BATCH_SIZE = 32
 
 SEED = 85
 random.seed(SEED)
