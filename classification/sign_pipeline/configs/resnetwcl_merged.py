@@ -7,7 +7,6 @@ import torch.optim as optim
 from torchvision.transforms import ToTensor, Normalize, Compose, RandomAffine
 
 from .base import ConfigSignBase, PredictConfigSignBase, NUM_CLASSES, TRAIN_DATASET_PATH_MERGED
-from itertools import chain
 
 MODEL_SAVE_PATH = "models/sign_resnetwcl_merged"
 BATCH_SIZE = 64
@@ -39,12 +38,6 @@ class Config(ConfigSignBase):
         ])
 
         optimizer = optim.Adam(
-            # chain(
-            #     model.layer2.parameters(),
-            #     model.layer3.parameters(),
-            #     model.layer4.parameters(),
-            #     model.fc.parameters()
-            # ),
             model.parameters(),
             lr=1e-4)
 
@@ -62,4 +55,5 @@ class Config(ConfigSignBase):
 
 class PredictConfig(PredictConfigSignBase):
     def __init__(self):
-        super().__init__(model=get_model(), model_save_path=MODEL_SAVE_PATH, batch_size=BATCH_SIZE)
+        super().__init__(model=get_model(), test_path="/group-volume/orc_srr/multimodal/iceblood/classification/cascade_vmk_bin_26_processed",
+                         model_save_path=MODEL_SAVE_PATH, batch_size=BATCH_SIZE)

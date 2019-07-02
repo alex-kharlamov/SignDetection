@@ -16,7 +16,7 @@ TRAIN_DATASET_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/f
 TRAIN_DATASET_PATH_VMK = "/group-volume/orc_srr/multimodal/iceblood/classification/full_russia_vmk"
 TRAIN_DATASET_PATH_MERGED = "/group-volume/orc_srr/multimodal/iceblood/classification/merged"
 
-TEST_DATASET_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/final_skolkovo"
+VAL_DATASET_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/final_skolkovo"
 
 LABELS_MAPPING_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/labels_mapping"
 TRAIN_LOAD_SIZE = 128 + 6
@@ -77,7 +77,7 @@ class ConfigSignBase(ConfigBase):
 
         train_dataset = get_dataset(path=train_dataset_path, transforms=train_transforms, train=True,
                                     use_mixup=mixup_alpha > 0)
-        val_dataset = get_dataset(path=TEST_DATASET_PATH, transforms=val_transforms, train=False,
+        val_dataset = get_dataset(path=VAL_DATASET_PATH, transforms=val_transforms, train=False,
                                   use_mixup=mixup_alpha > 0)
 
         if mixup_alpha > 0:
@@ -103,11 +103,11 @@ class ConfigSignBase(ConfigBase):
 
 
 class PredictConfigSignBase(PredictConfigBase):
-    def __init__(self, model, model_save_path, num_workers=4, batch_size=128):
+    def __init__(self, model, model_save_path, test_path, num_workers=4, batch_size=128):
         predictor_cls = PredictorClassification
 
         images_dataset = DatasetWithPostprocessingFunc(
-            SignImagesDataset(path=TEST_DATASET_PATH, labels_mapping_path=LABELS_MAPPING_PATH,
+            SignImagesDataset(path=test_path, labels_mapping_path=LABELS_MAPPING_PATH,
                               load_size=TEST_LOAD_SIZE, crop_size=TEST_CROP_SIZE),
             Compose([ToTensor(), Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))]))
 
