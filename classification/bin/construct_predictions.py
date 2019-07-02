@@ -30,7 +30,6 @@ def main():
     result = []
     for prediction, info in zip(predictions, extracted_bboxes):
         prediction = prediction.cpu()
-        prediction = torch.softmax(prediction, dim=0)
         label_id = int(prediction.argmax())
         probability = float(prediction.max())
 
