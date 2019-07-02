@@ -37,7 +37,7 @@ class ImgAugTransforms:
         ])
 
     def __call__(self, image):
-        image = np.array(self._seq.augment_image(image))
+        image = np.array(image)
         image = self._seq.augment_image(image)
         return Image.fromarray(image)
 
