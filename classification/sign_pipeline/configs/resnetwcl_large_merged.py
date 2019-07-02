@@ -25,6 +25,7 @@ def get_model():
     model.fc = nn.Linear(model.fc.in_features, NUM_CLASSES)
     return model
 
+
 class ImgAugTransforms:
     def __init__(self):
         self._seq = iaa.Sequential([
@@ -37,7 +38,7 @@ class ImgAugTransforms:
 
     def __call__(self, image):
         image = np.array(self._seq.augment_image(image))
-        image = self._seq.augment(image)
+        image = self._seq.augment_image(image)
         return Image.fromarray(image)
 
 
