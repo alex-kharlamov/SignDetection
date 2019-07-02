@@ -13,7 +13,7 @@ def main():
 
     args = parser.parse_args()
 
-    predictions = torch.load(args.predictions_path).cpu()
+    predictions = torch.load(args.predictions_path)
 
     with open(args.extracted_bboxes_path, "rb") as fin:
         extracted_bboxes = pickle.load(fin)
@@ -27,6 +27,7 @@ def main():
 
     result = []
     for prediction, info in zip(predictions, extracted_bboxes):
+        prediction = prediction.cpu()
         prediction = torch.softmax(prediction, dim=0)
         label_id = int(prediction.argmax())
         probability = float(prediction.max())
