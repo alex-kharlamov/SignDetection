@@ -1,3 +1,4 @@
+import os
 import time
 from typing import Iterable
 
@@ -7,8 +8,6 @@ import torch.nn as nn
 from ..logger import LOGGER
 from ..storage.predictions import PredictionsStorageBase
 from ..utils import move_to_device, load_model
-
-import os
 
 
 class PredictorBase:

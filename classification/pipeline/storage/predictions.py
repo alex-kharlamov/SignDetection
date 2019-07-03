@@ -1,8 +1,9 @@
-from ..core import PipelineError
-
 import abc
-import torch
 import os
+
+import torch
+
+from ..core import PipelineError
 
 
 class PredictionsStorageBase(abc.ABC):
