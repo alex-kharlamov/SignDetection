@@ -15,17 +15,18 @@ def extract_bboxes(annotation, bboxes):
     result = []
     image = Image.open(annotation["filename"]).convert("RGB")
 
-    for bbox in bboxes[0]:
-        if len(bbox) == 0:
-            continue
-        bbox = [int(bbox[0]), int(bbox[1]), int(bbox[2]), int(bbox[3])]
-        data = {
-            "bbox": bbox,
-            "cropped_image": crop_image(image, bbox),
-            "filename": annotation["filename"]
-        }
+    for class_bboxes in bboxes[0]:
+        for bbox in class_bboxes:
+            if len(bbox) == 0:
+                continue
+            bbox = [int(bbox[0]), int(bbox[1]), int(bbox[2]), int(bbox[3])]
+            data = {
+                "bbox": bbox,
+                "cropped_image": crop_image(image, bbox),
+                "filename": annotation["filename"]
+            }
 
-        result.append(data)
+            result.append(data)
 
     return result
 
