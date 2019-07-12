@@ -20,7 +20,7 @@ from mmdet.ops.nms import nms_cpu, nms
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--list_all_classes_path", default='all_casses.txt')
+    parser.add_argument("--list_all_classes_path", default='all_classes.txt')
     parser.add_argument("--list_valid_classes_path", default='valid_classes_stage0.txt')
     parser.add_argument("--mmdet_predict_path",
                         default='/group-volume/orc_srr/multimodal/iceblood/develop/mmdetection/cascade_skolkovo_fit_frozen4_lll_lr_38.pkl')
