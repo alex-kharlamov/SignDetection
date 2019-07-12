@@ -56,7 +56,7 @@ def main():
 
     print('num classes: ', len(all_classes_list))
     print('num valid classes: ', len(valid_classes_list))
-    
+
 
     with open(pred_pickle_path, 'rb') as outfile:
         subm_data = pickle.load(outfile)
@@ -95,3 +95,7 @@ def main():
                 cur_box = cur_box[:4].astype(np.int32)
                 cur_box = list(map(str, cur_box.tolist()))
                 f.write('\t'.join([img_name, *cur_box, cur_sign]) + '\n')
+
+
+if __name__ == "__main__":
+    main()
