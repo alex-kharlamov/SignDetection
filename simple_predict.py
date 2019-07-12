@@ -20,18 +20,20 @@ from mmdet.ops.nms import nms_cpu, nms
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("list_all_classes_path")
-    parser.add_argument("list_valid_classes_path")
-    parser.add_argument("mmdet_predict_path")
-    parser.add_argument("submission_annotation_path")
-    parser.add_argument("confidence", type=float)
-    parser.add_argument("class_accuracy", type=int)
-    parser.add_argument("output_result_path")
+    parser.add_argument("list_all_classes_path", default='all_casses.txt')
+    parser.add_argument("list_valid_classes_path", default='valid_classes_stage0.txt')
+    parser.add_argument("mmdet_predict_path",
+                        default='/group-volume/orc_srr/multimodal/iceblood/develop/mmdetection/cascade_skolkovo_fit_frozen4_lll_lr_38.pkl')
+    parser.add_argument("submit_annotation_path",
+                        default='/group-volume/orc_srr/multimodal/iceblood/datasets/main/TEST/final_skolkovo.pickle')
+    parser.add_argument("confidence", type=float, default=0.55)
+    parser.add_argument("class_accuracy", type=int, default=2)
+    parser.add_argument("output_result_path", default='submits')
 
     args = parser.parse_args()
 
     pred_pickle_path = args.mmdet_predict_path
-    subm_annotations_path = args.submission_annotation_path
+    subm_annotations_path = args.submit_annotation_path
     output_result_path = args.output_result_path
     class_accuracy = args.class_accuracy
     convert_class = lambda x: '.'.join(str(x).split('.')[:class_accuracy])
