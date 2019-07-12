@@ -39,8 +39,8 @@ def main():
     convert_class = lambda x: '.'.join(str(x).split('.')[:class_accuracy])
 
     output_result_path = os.path.join(output_result_path, 'subm_' + pred_pickle_path.split('/')[-1]
-                                      + '_' + str(args.confidence)
-                                      + '_' + str(args.class_accuracy))
+                                      + '_' + str(args.confidence).split('.')[-1]
+                                      + '_' + str(args.class_accuracy) + '.csv')
     all_classes_list = []
     with open(args.list_all_classes_path, 'r') as fileobj:
         for row in fileobj:
@@ -64,7 +64,7 @@ def main():
     with open(subm_annotations_path, 'rb') as outfile:
         subm_annotations = pickle.load(outfile)
 
-    with open(output_result_path, 'w') as f:
+    with open(output_result_path, 'w+') as f:
         f.write('\t'.join(['frame', 'xtl', 'ytl', 'xbr', 'ybr', 'class']) + '\n')
         for cur_pred, name in tqdm(zip(subm_data, subm_annotations)):
             name = str('/'.join(name['filename'].split('/')[-2:]))
