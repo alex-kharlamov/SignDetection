@@ -54,6 +54,10 @@ def main():
     all_classes_list = [convert_class(x) for x in all_classes_list]
     valid_classes_list = [convert_class(x) for x in valid_classes_list]
 
+    print('num classes: ', len(all_classes_list))
+    print('num valid classes: ', len(valid_classes_list))
+    
+
     with open(pred_pickle_path, 'rb') as outfile:
         subm_data = pickle.load(outfile)
 
@@ -62,7 +66,7 @@ def main():
 
     with open(output_result_path, 'w') as f:
         f.write('\t'.join(['frame', 'xtl', 'ytl', 'xbr', 'ybr', 'class']) + '\n')
-        for cur_pred, name in zip(subm_data, subm_annotations):
+        for cur_pred, name in tqdm(zip(subm_data, subm_annotations)):
             name = str('/'.join(name['filename'].split('/')[-2:]))
             img_name = name.split('/')
             img_name = img_name[-2] + '/' + img_name[-1]
