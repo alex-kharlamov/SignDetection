@@ -24,7 +24,8 @@ def main():
     parser.add_argument("list_valid_classes_path")
     parser.add_argument("mmdet_predict_path")
     parser.add_argument("submission_annotation_path")
-    parser.add_argument("class_accuracy")
+    parser.add_argument("confidence", type=float)
+    parser.add_argument("class_accuracy", type=int)
     parser.add_argument("output_result_path")
 
     args = parser.parse_args()
@@ -35,6 +36,9 @@ def main():
     class_accuracy = args.class_accuracy
     convert_class = lambda x: '.'.join(str(x).split('.')[:class_accuracy])
 
+    output_result_path = os.path.join(output_result_path, 'subm_' + pred_pickle_path.split('/')[-1]
+                                      + '_' + str(args.confidence)
+                                      + '_' + str(args.class_accuracy))
     all_classes_list = []
     with open(args.list_all_classes_path, 'r') as fileobj:
         for row in fileobj:
@@ -70,7 +74,7 @@ def main():
                     h = xmax - x
                     w = ymax - y
                     cur_box = [x, y, x + h, y + w, p]
-                    if cur_box[-1] >= 0.55 and cur_sign in valid_classes_list:
+                    if cur_box[-1] >= args.confidence and cur_sign in valid_classes_list:
                         all_boxes.append(cur_box)
                         all_classes.append(cur_sign)
 
