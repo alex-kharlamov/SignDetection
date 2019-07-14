@@ -27,7 +27,15 @@ def main():
         label_multi = prediction_multi.argmax()
         prob_multi = prediction_multi.max()
 
-        result.append([info["filename"], info["bbox"], int(label_multi), float(prob_multi), float(torch.sigmoid(prediction_binary))])
+        if len(result) == 0 or result[-1]["filename"] != info["filename"]:
+            result.append({
+                "filename": info["filename"],
+                "predictions": []
+            })
+
+        result[-1]["predictions"].append([
+            info["bbox"], int(label_multi), float(prob_multi), float(torch.sigmoid(prediction_binary))
+        ])
 
     with open(args.output_path, "wb") as fout:
         pickle.dump(result, fout)
