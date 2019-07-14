@@ -3,11 +3,11 @@ import os
 import subprocess
 import shutil
 
-TMP_PATH = ""
-TEST_PICKLE_PATH = ""
+TMP_PATH = "/root/SignDetection/classification/bin/tmp_folder"
+TEST_PICKLE_PATH = "/root/SignDetection/classification/bin/tmp_folder/test.pickle"
 SKIP_FRAMES_NUM = 1
-CLASSIFICATOR_CONFIG = ""
-CLASSIFICATOR_PREDICTIONS_FOLDER = ""
+CLASSIFICATOR_CONFIG = "/root/SignDetection/classification/sign_pipeline/configs/resnet34.py"
+CLASSIFICATOR_PREDICTIONS_FOLDER = "/root/SignDetection/classification/models/resnet34/predictions"
 
 
 def main():
