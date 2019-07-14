@@ -50,4 +50,5 @@ class Config(ConfigSignBase):
 
 class PredictConfig(PredictConfigSignBase):
     def __init__(self):
-        super().__init__(model=get_model(), model_save_path=MODEL_SAVE_PATH, batch_size=BATCH_SIZE)
+        super().__init__(
+            model=get_model(), model_save_path=MODEL_SAVE_PATH, batch_size=BATCH_SIZE)

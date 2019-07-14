@@ -15,6 +15,8 @@ TRAIN_DATASET_PATH = "/Vol1/dbstore/datasets/multimodal/iceblood/data_pnm/classi
 
 VAL_DATASET_PATH = "/Vol1/dbstore/datasets/multimodal/iceblood/data_pnm/classification_ann_test"
 
+TEST_DATASET_PATH = "/Vol1/dbstore/datasets/multimodal/iceblood/classificator_input.pickle"
+
 
 TRAIN_LOAD_SIZE = 128 + 25
 TRAIN_CROP_SIZE = 128
@@ -97,11 +99,11 @@ class ConfigSignBase(ConfigBase):
 
 
 class PredictConfigSignBase(PredictConfigBase):
-    def __init__(self, model, model_save_path, test_path, num_workers=4, batch_size=128):
+    def __init__(self, model, model_save_path, num_workers=4, batch_size=128):
         predictor_cls = PredictorClassification
 
         images_dataset = DatasetWithPostprocessingFunc(
-            SignImagesDataset(path=test_path,
+            SignImagesDataset(path=TEST_DATASET_PATH,
                               load_size=TEST_LOAD_SIZE, crop_size=TEST_CROP_SIZE),
             Compose([ToTensor(), Normalize((0.5, 0.5, 0.5), (0.2, 0.2, 0.2))]))
 

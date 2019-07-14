@@ -28,6 +28,9 @@ def main():
         str(SKIP_FRAMES_NUM)])
 
     print("Running mmdet...")
+    """
+    ./tools/test.py configs/fp16_101_full_annotations_predict.py work_dirs/fp32_cascade_rcnn_x100_64x4d_fpn_1x_fit/cascade_vmk_pretrain.pth --out result/fp16_101_annotation_predict.pkl
+    """
     # TODO! mmdet prediction command
 
     print("Running filter_predictions.py...")

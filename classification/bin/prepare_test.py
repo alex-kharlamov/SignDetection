@@ -4,7 +4,7 @@ import pickle
 import joblib
 from PIL import Image
 import cv2
-#from colour_demosaicing import demosaicing_CFA_Bayer_bilinear
+from colour_demosaicing import demosaicing_CFA_Bayer_bilinear
 
 
 N_JOBS = 16
