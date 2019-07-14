@@ -6,7 +6,7 @@ import shutil
 TMP_PATH = "/root/SignDetection/classification/bin/tmp_folder"
 TEST_PICKLE_PATH = "/root/SignDetection/classification/bin/tmp_folder/test.pickle"
 SKIP_FRAMES_NUM = 8
-CLASSIFICATOR_CONFIG = "/root/SignDetection/classification/sign_pipeline/configs/resnet34.py"
+CLASSIFICATOR_CONFIG = "sign_pipeline.configs.resnet34.py"
 CLASSIFICATOR_PREDICTIONS_FOLDER = "/root/SignDetection/classification/models/resnet34/predictions"
 
 MMDETECTION_BINARY_PATH = "/root/mmsetection_pnm/tools/test.py"
