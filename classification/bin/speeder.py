@@ -24,8 +24,8 @@ TRACKING_IOU_INTERPOLATE = 1  # 0.9
 TRACKING_MIN_CORRELATION = 0.3
 TRACKING_MAX_DISTANCE_PIXELS = 250
 BIG_CROP_PADDING = 20
-TEMPORARY_THRESHOLD = 0.51
-ASSOCIATED_THRESHOLD = 0.6
+TEMPORARY_THRESHOLD = 1000 # TODO CHANGE IT
+ASSOCIATED_THRESHOLD = 1000  # TODO CHANGE IT
 NUM_WORKERS = 4
 
 
@@ -112,7 +112,6 @@ class ImageFilelist(data.Dataset):
         impath = self.imlist[index]
         target = 0
         # img = self.loader(os.path.join(self.images_data_path, impath))
-        print("Load img", os.path.join(impath))
         arr_img = cv2.imread(os.path.join(impath))
         arr_img = cv2.cvtColor(arr_img, cv2.COLOR_BGR2GRAY)
 
