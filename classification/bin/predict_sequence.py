@@ -3,6 +3,8 @@ import os
 import subprocess
 import shutil
 
+
+
 TMP_PATH = "/root/SignDetection/classification/bin/tmp_folder"
 TEST_PICKLE_PATH = "/root/SignDetection/classification/bin/tmp_folder/test.pickle"
 SKIP_FRAMES_NUM = 8
@@ -49,7 +51,7 @@ def main():
             MMDETECTION_DIST_BINARY_PATH,
             MMDETECTION_CONFIG_PATH,
             MMDETECTION_CHECKPOINT_PATH,
-            "1",
+            "2",
             "--out",
             os.path.join(TMP_PATH, "detector_output.pickle")])
 
