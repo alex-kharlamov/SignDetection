@@ -38,7 +38,7 @@ def main():
         str(SKIP_FRAMES_NUM)])
 
     print("Running mmdet...")
-    if False:
+    if True:
         subprocess.check_call([
             "python3",
             MMDETECTION_BINARY_PATH,
