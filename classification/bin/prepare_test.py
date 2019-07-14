@@ -14,11 +14,14 @@ def crop_image(image, bbox):
     return image.crop(bbox)
 
 
-def load_img(path):
+def load_img_new(path):
     image = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
     image = demosaicing_CFA_Bayer_bilinear(image).astype("uint8")
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     return Image.fromarray(image)
+
+def load_img(path):
+    return Image.open(path)
 
 
 def extract_bboxes(annotation, bboxes):
