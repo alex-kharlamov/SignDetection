@@ -411,7 +411,7 @@ def main():
 
     file_names = []
 
-    for cur_img in glob.glob(args.sequence_path + "**", recursive=True):
+    for cur_img in glob.glob(args.sequence_path + "/**", recursive=True):
         if not ".pnm" in cur_img:
             continue
         file_names.append(cur_img)
