@@ -4,7 +4,7 @@ import pickle
 import joblib
 from PIL import Image
 import cv2
-from colour_demosaicing import demosaicing_CFA_Bayer_bilinear
+import numpy as np
 
 
 N_JOBS = 16
@@ -14,10 +14,25 @@ def crop_image(image, bbox):
     return image.crop(bbox)
 
 
+def histeq(image):
+    reshaped = image.reshape((image.shape[0] * image.shape[1], 3)).astype("float32")
+    y = (reshaped[:, 0] * 1 + reshaped[:, 1] * 1 + reshaped[:, 2] * 2) / 4
+    y = y.astype("uint8")
+
+    hist = np.bincount(y, minlength=256).astype("float32")
+
+    hist_sum = np.cumsum(hist)
+    max_value = hist_sum[-1] / 255
+
+    map_value = (hist_sum / max_value).astype("uint8")
+    return map_value[image]
+
+
 def load_img(path):
-    image = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
-    image = demosaicing_CFA_Bayer_bilinear(image).astype("uint8")
-    return Image.fromarray(image)
+    img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+    img = cv2.cvtColor(img, cv2.COLOR_BAYER_RG2RGB)
+    img = histeq(img)
+    return Image.fromarray(img)
 
 
 def extract_bboxes(annotation, bboxes):

@@ -5,7 +5,7 @@ import pickle
 import cv2
 import joblib
 from PIL import Image
-from colour_demosaicing import demosaicing_CFA_Bayer_bilinear
+import numpy as np
 
 from sign_pipeline.associated import AVAILABLE_CLASSES
 
@@ -13,11 +13,25 @@ N_JOBS = 16
 PADDING_PERCENT = 20
 
 
+def histeq(image):
+    reshaped = image.reshape((image.shape[0] * image.shape[1], 3)).astype("float32")
+    y = (reshaped[:, 0] * 1 + reshaped[:, 1] * 1 + reshaped[:, 2] * 2) / 4
+    y = y.astype("uint8")
+
+    hist = np.bincount(y, minlength=256).astype("float32")
+
+    hist_sum = np.cumsum(hist)
+    max_value = hist_sum[-1] / 255
+
+    map_value = (hist_sum / max_value).astype("uint8")
+    return map_value[image]
+
+
 def load_img(path):
-    image = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
-    image = demosaicing_CFA_Bayer_bilinear(image).astype("uint8")
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    return Image.fromarray(image)
+    img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+    img = cv2.cvtColor(img, cv2.COLOR_BAYER_RG2RGB)
+    img = histeq(img)
+    return Image.fromarray(img)
 
 
 def crop_image(image, bbox):
@@ -71,7 +85,8 @@ def main():
         annotations = pickle.load(fin)
 
     p = joblib.Parallel(n_jobs=N_JOBS, backend="multiprocessing", verbose=5)
-    extracted_annotations = p(joblib.delayed(extract_annotations)(args.data_path, annotation) for annotation in annotations)
+    extracted_annotations = p(
+        joblib.delayed(extract_annotations)(args.data_path, annotation) for annotation in annotations)
     result = []
 
     for annotation in extracted_annotations:
