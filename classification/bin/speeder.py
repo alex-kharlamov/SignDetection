@@ -389,7 +389,7 @@ def write_submit(submit_path, selected_filenames, final_boxes):
                 class_id = int(class_id)
                 class_name = all_pos_classes[class_id]
                 bbox = hw_to_min_max(bbox)
-                bbox = list(map(str, bbox))
+                bbox = list(map(lambda x: str(int(x)), bbox))
                 temporary = "true" if temporary == 1 else "false"
                 associated_class_name = ""
                 if associated_class_id < len(AVAILABLE_CLASSES):
@@ -455,6 +455,8 @@ def main():
 
         current_sequence_tracking.append((frame_final_boxes, cur_img_gray))
 
+        import pdb
+        pdb.set_trace()
         if frame_predictions is not None and len(current_sequence_tracking) > 1:
             if current_sequence_index == 0:
                 final_boxes.append(current_sequence_tracking[0][0])
