@@ -445,3 +445,7 @@ def main():
             final_boxes.append(boxes)
 
     write_submit(SUBMIT_PATH, selected_filenames, final_boxes)
+
+
+if __name__ == "__main__":
+    main()
