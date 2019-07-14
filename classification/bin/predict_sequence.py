@@ -49,7 +49,7 @@ def main():
             MMDETECTION_DIST_BINARY_PATH,
             MMDETECTION_CONFIG_PATH,
             MMDETECTION_CHECKPOINT_PATH,
-            "2",
+            "1",
             "--out",
             os.path.join(TMP_PATH, "detector_output.pickle")])
 
