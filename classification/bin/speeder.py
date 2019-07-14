@@ -455,8 +455,6 @@ def main():
 
         current_sequence_tracking.append((frame_final_boxes, cur_img_gray))
 
-        import pdb
-        pdb.set_trace()
         if frame_predictions is not None and len(current_sequence_tracking) > 1:
             if current_sequence_index == 0:
                 final_boxes.append(current_sequence_tracking[0][0])
