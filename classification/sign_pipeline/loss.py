@@ -31,21 +31,22 @@ class SignMetricsCalculator(MetricsCalculatorBase):
 
     def zero_cache(self):
         self._predictions = []
-        self._true_labels = []
+        self._true_labels_multi = []
+        self._true_labels_binary = []
 
     def add(self, y_predicted, y_true):
         self._predictions.append(y_predicted.cpu().data.numpy())
-        self._true_labels.append(y_true.cpu().data.numpy())
+        self._true_labels_multi.append(y_true[0].cpu().data.numpy())
+        self._true_labels_binary.append(y_true[1].cpu().data.numpy())
 
     def calculate(self):
         y_pred = np.concatenate(self._predictions)
-        y_true = np.concatenate(self._true_labels)
+        y_true_multi = np.concatenate(self._true_labels_multi)
+        y_true_binary = np.concatenate(self._true_labels_binary)
 
         y_pred_multi = np.argmax(y_pred[:, :-1], -1)
         y_pred_binary = (y_pred[:, -1] >= self._border).astype("int")
 
-        y_true_multi = y_true[0]
-        y_true_binary = y_true[1]
 
         return {"accuracy_multi": accuracy_score(y_true_multi, y_pred_multi),
                 "accuracy_binary": accuracy_score(y_true_binary, y_pred_binary)}
