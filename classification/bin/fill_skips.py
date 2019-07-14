@@ -17,6 +17,10 @@ def main():
     with open(args.predictions_path, "rb") as fin:
         predictions = pickle.load(fin)
 
+    filename_to_predict = {}
+    for predict in predictions:
+        filename_to_predict[predict["filename"]] = predict["predictions"]
+
     index = 0
     predict_index = 0
     result = []
@@ -29,7 +33,8 @@ def main():
             result.append(None)
             continue
 
-        result.append(predictions[predict_index])
+        prediction = filename_to_predict.get(os.path.join(args.sequence_path, file_name), [])
+        result.append(prediction)
         predict_index += 1
 
     with open(args.output_path, "wb") as fout:
