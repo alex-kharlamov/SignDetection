@@ -5,6 +5,7 @@ import pickle
 import time
 
 import cv2
+import argparse
 import numpy as np
 import torch
 import torch.utils.data as data
@@ -12,11 +13,10 @@ from PIL import Image
 
 from sign_pipeline.associated import AVAILABLE_CLASSES
 
-IMAGES_DATA_PATH = "/home/mml6/IceChallenge/test/"
-PREDICTIONS_PATH = "Final_model/full_skolkovo_final_stage0_842.pkl"
-ALL_CLASSES_PATH = ""
-SUBMIT_PATH = ""
-PRED_THRESHOLD = 0.55
+
+ALL_CLASSES_PATH = "/root/all_classes.txt"
+SUBMIT_PATH = "/root/submit.tsv"
+PRED_THRESHOLD = 0.65
 IOU_NMS_THRESHOLD = 0.05
 MIN_BBOX_SQUARE = 100
 TRACKING_MIN_IOU = 0.001
@@ -26,7 +26,7 @@ TRACKING_MAX_DISTANCE_PIXELS = 250
 BIG_CROP_PADDING = 20
 TEMPORARY_THRESHOLD = 0.51
 ASSOCIATED_THRESHOLD = 0.6
-NUM_WORKERS = 12
+NUM_WORKERS = 4
 
 
 def hw_to_min_max(box):
@@ -376,12 +376,19 @@ def write_submit(submit_path, selected_filenames, final_boxes):
 
 
 def main():
-    with open(PREDICTIONS_PATH, 'rb') as fin:
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("sequence_path")
+    parser.add_argument("predictions_path")
+
+    args = parser.parse_args()
+
+    with open(args.predictions_path, 'rb') as fin:
         detector_predictions = pickle.load(fin)
 
     file_names = []
 
-    for cur_img in glob.glob(IMAGES_DATA_PATH + "**", recursive=True):
+    for cur_img in glob.glob(args.sequence_path + "**", recursive=True):
         if not ".pnm" in cur_img:
             continue
         cur_img = '/'.join(cur_img.split('/')[-2:])
@@ -391,7 +398,7 @@ def main():
     video_seq = np.argsort(file_names)[::-1]
     selected_filenames = file_names[video_seq]
 
-    dataset = ImageFilelist(IMAGES_DATA_PATH, selected_filenames)
+    dataset = ImageFilelist(args.sequence_path, selected_filenames)
     loader = torch.utils.data.DataLoader(dataset,
                                          shuffle=False,
                                          num_workers=NUM_WORKERS)
