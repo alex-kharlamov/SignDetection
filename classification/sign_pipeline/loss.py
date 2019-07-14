@@ -17,7 +17,7 @@ class SignLoss(nn.Module):
         binary_pred = y_pred[:, -1]
 
         multi_true = y_true[0]
-        binary_true = y_true[1]
+        binary_true = y_true[1].float()
 
         loss = self._multi(multi_pred, multi_true) + self._binary_weight * self._binary(binary_pred, binary_true)
         return loss
