@@ -15,7 +15,7 @@ TRAIN_DATASET_PATH = "/Vol1/dbstore/datasets/multimodal/iceblood/data_pnm/classi
 
 VAL_DATASET_PATH = "/Vol1/dbstore/datasets/multimodal/iceblood/data_pnm/classification_ann_test"
 
-TEST_DATASET_PATH = "/Vol1/dbstore/datasets/multimodal/iceblood/classificator_input.pickle"
+TEST_DATASET_PATH = "/root/SignDetection/classification/bin/tmp_folder/classificator_input.pickle"
 
 
 TRAIN_LOAD_SIZE = 128 + 25
