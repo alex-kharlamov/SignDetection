@@ -20,12 +20,12 @@ def main():
     index = 0
     predict_index = 0
     result = []
-    for file_name in sorted(os.listdir(args.sequence_path), reverse=True):
-        if not file_name.endswith(".pnm"):
-            continue
+    files = sorted(os.listdir(args.sequence_path), reverse=True)
+    files = list(filter(lambda x: x.endswith(".pnm"), files))
 
+    for file_name in files:
         index += 1
-        if (index - 1) % args.skip != 0:
+        if (index - 1) % args.skip != 0 and file_name != files[-1]:
             result.append(None)
             continue
 
