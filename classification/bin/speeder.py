@@ -383,6 +383,7 @@ def write_submit(submit_path, selected_filenames, final_boxes):
         for ind in range(len(selected_filenames)):
             img_name = selected_filenames[ind]
             img_name = img_name.replace('.pnm', '')
+            img_name = "/".join(img_name.split("/")[-2:])
             for bbox, class_id, temporary, associated_class_id in final_boxes[ind]:
                 class_id = int(class_id)
                 class_name = all_pos_classes[class_id]
