@@ -126,7 +126,7 @@ class ImageFilelist(data.Dataset):
 
 def match_bboxes_iou(start_frame_bboxes, finish_frame_bboxes):
     # Returns list of pairs (start_bbox, finish_bbox, start_bbox_index, finish_bbox_index)
-    # where each bbox is a pair (bbox, class_id)
+    # where each bbox is a pair (bbox, class_id, temporary, associated_class_id)
 
     start_to_finish_iou = []
     for i, start_bbox in enumerate(start_frame_bboxes):
@@ -150,8 +150,8 @@ def match_bboxes_iou(start_frame_bboxes, finish_frame_bboxes):
         if i in used_start_bboxes or j in used_finish_bboxes:
             continue
 
-        start_bbox = start_frame_bboxes[i][:-1]
-        finish_bbox = finish_frame_bboxes[j][:-1]
+        start_bbox = start_frame_bboxes[i]
+        finish_bbox = finish_frame_bboxes[j]
         matched_pairs.append((start_bbox, finish_bbox, i, j))
 
         used_start_bboxes.add(i)
@@ -167,7 +167,7 @@ def get_distance_between_bboxes(start_bbox, finish_bbox):
 
 def match_bboxes_template(start_frame, finish_frame):
     # Returns list of pairs (start_bbox, finish_bbox, start_bbox_index, finish_bbox_index)
-    # where each bbox is a pair (bbox, class_id)
+    # where each bbox is a pair (bbox, class_id, temporary, associated_class_id)
 
     start_frame_bboxes = start_frame[0]
     finish_frame_bboxes = finish_frame[0]
@@ -215,8 +215,8 @@ def match_bboxes_template(start_frame, finish_frame):
         if i in used_start_bboxes or j in used_finish_bboxes:
             continue
 
-        start_bbox = start_frame_bboxes[i][:-1]
-        finish_bbox = finish_frame_bboxes[j][:-1]
+        start_bbox = start_frame_bboxes[i]
+        finish_bbox = finish_frame_bboxes[j]
         matched_pairs.append((start_bbox, finish_bbox, i, j))
 
         used_start_bboxes.add(i)
@@ -227,7 +227,7 @@ def match_bboxes_template(start_frame, finish_frame):
 
 def match_bboxes(start_frame, finish_frame):
     # Returns list of pairs (start_bbox, finish_bbox)
-    # where each bbox is a pair (bbox, class_id)
+    # where each bbox is a pair (bbox, class_id, temporary, associated_class_id)
 
     matched_pairs = []
 
