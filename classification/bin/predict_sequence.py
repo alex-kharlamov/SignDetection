@@ -48,7 +48,7 @@ def main():
         os.path.join(TMP_PATH, "detector_filtered.pickle"),
         os.path.join(TMP_PATH, "classificator_input.pickle")])
 
-    print("Running prepare_test.py...")  # TODO! run classificator predict correctly
+    print("Running predict.py...")  # TODO! run classificator predict correctly
     subprocess.check_call([
         "python3",
         "predict.py", ])
@@ -58,7 +58,7 @@ def main():
         "python3",
         "construct_predictions.py",
         # TODO! classificator predictions path,
-        os.path.join(TMP_PATH, "detector_filtered.pickle"),
+        os.path.join(TMP_PATH, "classificator_input.pickle"),
         os.path.join(TMP_PATH, "classificator_output.pickle")])
 
     print("Running fill_skips.py...")
