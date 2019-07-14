@@ -109,7 +109,7 @@ class TrainerBase:
 
             self.log_train_step(epoch_id, step_id, epoch_time, loss, mean_loss / step_count)
 
-            total_samples += target.shape[0]
+            total_samples += input_data.shape[0]
 
             if self.max_epoch_length is not None and total_samples >= self.max_epoch_length:
                 break
