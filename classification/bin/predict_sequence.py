@@ -1,10 +1,13 @@
 import argparse
 import os
 import subprocess
+import shutil
 
 TMP_PATH = ""
 TEST_PICKLE_PATH = ""
 SKIP_FRAMES_NUM = 1
+CLASSIFICATOR_CONFIG = ""
+CLASSIFICATOR_PREDICTIONS_FOLDER = ""
 
 
 def main():
@@ -48,16 +51,20 @@ def main():
         os.path.join(TMP_PATH, "detector_filtered.pickle"),
         os.path.join(TMP_PATH, "classificator_input.pickle")])
 
-    print("Running predict.py...")  # TODO! run classificator predict correctly
+    if os.path.exists(CLASSIFICATOR_PREDICTIONS_FOLDER):
+        shutil.rmtree(CLASSIFICATOR_PREDICTIONS_FOLDER)
+
+    print("Running predict.py...")
     subprocess.check_call([
         "python3",
-        "predict.py", ])
+        "predict.py",
+        CLASSIFICATOR_CONFIG])
 
     print("Running construct_predictions.py...")
     subprocess.check_call([
         "python3",
         "construct_predictions.py",
-        # TODO! classificator predictions path,
+        os.path.join(CLASSIFICATOR_PREDICTIONS_FOLDER, "predictions"),
         os.path.join(TMP_PATH, "classificator_input.pickle"),
         os.path.join(TMP_PATH, "classificator_output.pickle")])
 
