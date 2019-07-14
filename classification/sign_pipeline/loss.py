@@ -18,8 +18,8 @@ class SignLoss(nn.Module):
 
         import pdb
         pdb.set_trace()
-        multi_true = y_true[:, :-1]
-        binary_true = y_true[:, -1:]
+        multi_true = y_true[0]
+        binary_true = y_true[1]
 
         loss = self._multi(multi_pred, multi_true) + self._binary_weight * self._binary(binary_pred, binary_true)
         return loss
@@ -46,8 +46,8 @@ class SignMetricsCalculator(MetricsCalculatorBase):
         y_pred_multi = np.argmax(y_pred[:, :-1], -1)
         y_pred_binary = (y_pred[:, -1] >= self._border).astype("int")
 
-        y_true_multi = y_true[:, :-1]
-        y_true_binary = y_true[:, -1]
+        y_true_multi = y_true[0]
+        y_true_binary = y_true[1]
 
         return {"accuracy_multi": accuracy_score(y_true_multi, y_pred_multi),
                 "accuracy_binary": accuracy_score(y_true_binary, y_pred_binary)}
