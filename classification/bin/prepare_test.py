@@ -33,7 +33,7 @@ def extract_bboxes(annotation, bboxes):
         data = {
             "bbox": bbox,
             "cropped_image": crop_image(
-                image, [int(bbox[0]), int(bbox[1]), int(bbox[2] + bbox[0]), int(bbox[3 + bbox[1]])]),
+                image, [int(bbox[0]), int(bbox[1]), int(bbox[2] + bbox[0]), int(bbox[3] + bbox[1])]),
             "filename": annotation["filename"]
         }
 
