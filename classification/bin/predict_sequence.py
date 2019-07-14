@@ -9,6 +9,10 @@ SKIP_FRAMES_NUM = 1
 CLASSIFICATOR_CONFIG = "/root/SignDetection/classification/sign_pipeline/configs/resnet34.py"
 CLASSIFICATOR_PREDICTIONS_FOLDER = "/root/SignDetection/classification/models/resnet34/predictions"
 
+MMDETECTION_BINARY_PATH = "/root/mmdetection/tools/test.py"
+MMDETECTION_CONFIG_PATH = ""
+MMDETECTION_CHECKPOINT_PATH = ""
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -31,10 +35,14 @@ def main():
         str(SKIP_FRAMES_NUM)])
 
     print("Running mmdet...")
-    """
-    ./tools/test.py configs/fp16_101_full_annotations_predict.py work_dirs/fp32_cascade_rcnn_x100_64x4d_fpn_1x_fit/cascade_vmk_pretrain.pth --out result/fp16_101_annotation_predict.pkl
-    """
-    # TODO! mmdet prediction command
+    subprocess.check_call([
+        "python3",
+        MMDETECTION_BINARY_PATH,
+        MMDETECTION_CONFIG_PATH,
+        MMDETECTION_CHECKPOINT_PATH,
+        "--out",
+        os.path.join(TMP_PATH, "detector_output.pickle")])
+
 
     print("Running filter_predictions.py...")
     subprocess.check_call([
