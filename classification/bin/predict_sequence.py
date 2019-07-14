@@ -50,6 +50,7 @@ def main():
             MMDETECTION_CONFIG_PATH,
             MMDETECTION_CHECKPOINT_PATH,
             "2",
+            "--out",
             os.path.join(TMP_PATH, "detector_output.pickle")])
 
 
