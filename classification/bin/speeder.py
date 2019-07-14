@@ -29,6 +29,27 @@ ASSOCIATED_THRESHOLD = 0.6
 NUM_WORKERS = 4
 
 
+def histeq(image):
+    reshaped = image.reshape((image.shape[0] * image.shape[1], 3)).astype("float32")
+    y = (reshaped[:, 0] * 1 + reshaped[:, 1] * 1 + reshaped[:, 2] * 2) / 4
+    y = y.astype("uint8")
+
+    hist = np.bincount(y, minlength=256).astype("float32")
+
+    hist_sum = np.cumsum(hist)
+    max_value = hist_sum[-1] / 255
+
+    map_value = (hist_sum / max_value).astype("uint8")
+    return map_value[image]
+
+
+def load_img(path):
+    img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+    img = cv2.cvtColor(img, cv2.COLOR_BAYER_RG2RGB)
+    img = histeq(img)
+    return Image.fromarray(img)
+
+
 def hw_to_min_max(box):
     return list(map(float, [box[0], box[1], box[2] + box[0], box[3] + box[1]]))
 
@@ -91,6 +112,7 @@ class ImageFilelist(data.Dataset):
         impath = self.imlist[index]
         target = 0
         # img = self.loader(os.path.join(self.images_data_path, impath))
+        print("Load img", os.path.join(self.images_data_path, impath))
         arr_img = cv2.imread(os.path.join(self.images_data_path, impath))
         arr_img = cv2.cvtColor(arr_img, cv2.COLOR_BGR2GRAY)
 
@@ -361,7 +383,7 @@ def write_submit(submit_path, selected_filenames, final_boxes):
 
         for ind in range(len(selected_filenames)):
             img_name = selected_filenames[ind]
-            img_name = img_name.replace('.jpg', '')
+            img_name = img_name.replace('.pnm', '')
             for bbox, class_id, temporary, associated_class_id in final_boxes[ind]:
                 class_id = int(class_id)
                 class_name = all_pos_classes[class_id]
