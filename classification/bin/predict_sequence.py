@@ -10,8 +10,8 @@ CLASSIFICATOR_CONFIG = "sign_pipeline.configs.resnet34.py"
 CLASSIFICATOR_PREDICTIONS_FOLDER = "/root/SignDetection/classification/bin/models/sign_resnet34/predictions"
 
 MMDETECTION_BINARY_PATH = "/root/mmsetection_pnm/tools/test.py"
-MMDETECTION_CONFIG_PATH = "/root/fp16_101_full_annotations_predict.py"
-MMDETECTION_CHECKPOINT_PATH = "/root/our_data/epoch_42.pth"
+MMDETECTION_CONFIG_PATH = "/root/fp16_cascade_rcnn_50_sk_fit_predict_085.py"
+MMDETECTION_CHECKPOINT_PATH = "/root/our_data/916_fp16_cascade_rcnn_x50_32x4d_fpn_1x_fit_85_epoch_27.pth"
 
 
 def main():
