@@ -413,7 +413,6 @@ def main():
     for cur_img in glob.glob(args.sequence_path + "**", recursive=True):
         if not ".pnm" in cur_img:
             continue
-        cur_img = '/'.join(cur_img.split('/')[-2:])
         file_names.append(cur_img)
 
     file_names = np.array(file_names)
