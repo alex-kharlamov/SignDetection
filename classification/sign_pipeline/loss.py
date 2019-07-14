@@ -14,7 +14,7 @@ class SignLoss(nn.Module):
 
     def forward(self, y_pred, y_true):
         multi_pred = y_pred[:, :-1]
-        binary_pred = y_pred[:, -1:]
+        binary_pred = y_pred[:, -1]
 
         multi_true = y_true[0]
         binary_true = y_true[1]
