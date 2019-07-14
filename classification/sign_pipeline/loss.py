@@ -47,6 +47,5 @@ class SignMetricsCalculator(MetricsCalculatorBase):
         y_pred_multi = np.argmax(y_pred[:, :-1], -1)
         y_pred_binary = (y_pred[:, -1] >= self._border).astype("int")
 
-
         return {"accuracy_multi": accuracy_score(y_true_multi, y_pred_multi),
                 "accuracy_binary": accuracy_score(y_true_binary, y_pred_binary)}
