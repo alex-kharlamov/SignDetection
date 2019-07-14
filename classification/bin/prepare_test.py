@@ -21,7 +21,7 @@ def load_img_new(path):
     return Image.fromarray(image)
 
 def load_img(path):
-    path = path.replace("/group-volume/orc_srr/multimodal/iceblood/datasets/main/", "/Vol1/dbstore/datasets/multimodal/iceblood")
+    path = path.replace("/group-volume/orc_srr/multimodal/iceblood/datasets/main/", "/Vol1/dbstore/datasets/multimodal/iceblood/")
     return Image.open(path)
 
 
