@@ -3,6 +3,9 @@ import pickle
 
 import joblib
 from PIL import Image
+import cv2
+from colour_demosaicing import demosaicing_CFA_Bayer_bilinear
+
 
 N_JOBS = 16
 
@@ -11,9 +14,16 @@ def crop_image(image, bbox):
     return image.crop(bbox)
 
 
+def load_img(path):
+    image = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+    image = demosaicing_CFA_Bayer_bilinear(image).astype("uint8")
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    return Image.fromarray(image)
+
+
 def extract_bboxes(annotation, bboxes):
     result = []
-    image = Image.open(annotation["filename"]).convert("RGB")
+    image = load_img(annotation["filename"])
 
     for class_bboxes in bboxes:
         for bbox in class_bboxes:
