@@ -81,7 +81,9 @@ def main():
         "fill_skips.py",
         args.sequence_path,
         os.path.join(TMP_PATH, "classificator_output.pickle"),
-        os.path.join(TMP_PATH, "speeder_input.pickle")])
+        os.path.join(TMP_PATH, "speeder_input.pickle"),
+        "--skip",
+        str(SKIP_FRAMES_NUM)])
 
     print("Running speeder.py...")
     subprocess.check_call([
