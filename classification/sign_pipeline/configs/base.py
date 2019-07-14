@@ -1,4 +1,3 @@
-import torch.nn as nn
 import torch.optim as optim
 from torchvision.transforms import ToTensor, Compose, Normalize
 
@@ -6,26 +5,22 @@ from pipeline.config_base import ConfigBase, PredictConfigBase
 from pipeline.datasets.base import DatasetWithPostprocessingFunc, DatasetComposer, OneHotTargetsDataset
 from pipeline.datasets.mixup import MixUpDatasetWrapper
 from pipeline.losses.vector_cross_entropy import VectorCrossEntropy
-from pipeline.metrics.accuracy import MetricsCalculatorAccuracy
 from pipeline.predictors.classification import PredictorClassification
 from pipeline.schedulers.learning_rate.reduce_on_plateau import SchedulerWrapperLossOnPlateau
 from pipeline.trainers.classification import TrainerClassification
 from sign_pipeline.dataset import SignImagesDataset, SignTargetsDataset
+from sign_pipeline.loss import SignLoss, SignMetricsCalculator
 
-TRAIN_DATASET_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/first_part_skolkovo"
-TRAIN_DATASET_PATH_VMK = "/group-volume/orc_srr/multimodal/iceblood/classification/full_russia_vmk"
-TRAIN_DATASET_PATH_MERGED = "/group-volume/orc_srr/multimodal/iceblood/classification/merged"
+TRAIN_DATASET_PATH = "/Vol1/dbstore/datasets/multimodal/iceblood/data_pnm/classification_ann_train"
 
-VAL_DATASET_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/final_skolkovo"
+VAL_DATASET_PATH = "/Vol1/dbstore/datasets/multimodal/iceblood/data_pnm/classification_ann_test"
 
-LABELS_MAPPING_PATH = "/group-volume/orc_srr/multimodal/iceblood/classification/labels_mapping"
-TRAIN_LOAD_SIZE = 128 + 6
+
+TRAIN_LOAD_SIZE = 128 + 25
 TRAIN_CROP_SIZE = 128
 
 TEST_LOAD_SIZE = 128
 TEST_CROP_SIZE = 128
-
-NUM_CLASSES = 198
 
 MAX_EPOCH_LENGTH = 10000
 
@@ -35,13 +30,12 @@ def get_dataset(path, transforms, train, use_mixup):
     crop_size = TRAIN_CROP_SIZE if train else TEST_CROP_SIZE
 
     images_dataset = DatasetWithPostprocessingFunc(
-        SignImagesDataset(path=path, labels_mapping_path=LABELS_MAPPING_PATH,
-                          load_size=load_size, crop_size=crop_size),
+        SignImagesDataset(path=path, load_size=load_size, crop_size=crop_size),
         transforms)
 
-    targets_dataset = SignTargetsDataset(path=path, labels_mapping_path=LABELS_MAPPING_PATH,
-                                         load_size=load_size, crop_size=crop_size)
+    targets_dataset = SignTargetsDataset(path=path, load_size=load_size, crop_size=crop_size)
     if use_mixup:
+        assert False # TODO DO NOT WORK!!!
         targets_dataset = OneHotTargetsDataset(targets_dataset, targets_dataset.get_class_count())
 
     return DatasetComposer([images_dataset, targets_dataset])
@@ -71,8 +65,8 @@ class ConfigSignBase(ConfigBase):
 
         if scheduler is None:
             scheduler = SchedulerWrapperLossOnPlateau(optimizer, patience=2)
-        loss = nn.CrossEntropyLoss()
-        metrics_calculator = MetricsCalculatorAccuracy()
+        loss = SignLoss()
+        metrics_calculator = SignMetricsCalculator()
         trainer_cls = TrainerClassification
 
         train_dataset = get_dataset(path=train_dataset_path, transforms=train_transforms, train=True,
@@ -107,7 +101,7 @@ class PredictConfigSignBase(PredictConfigBase):
         predictor_cls = PredictorClassification
 
         images_dataset = DatasetWithPostprocessingFunc(
-            SignImagesDataset(path=test_path, labels_mapping_path=LABELS_MAPPING_PATH,
+            SignImagesDataset(path=test_path,
                               load_size=TEST_LOAD_SIZE, crop_size=TEST_CROP_SIZE),
             Compose([ToTensor(), Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))]))
 

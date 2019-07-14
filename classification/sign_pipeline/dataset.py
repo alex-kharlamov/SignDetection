@@ -5,12 +5,9 @@ from torchvision.transforms import Compose, Resize, RandomCrop
 
 
 class SignDataset(data.Dataset):
-    def __init__(self, path, labels_mapping_path, load_size=256, crop_size=224):
+    def __init__(self, path, load_size, crop_size):
         with open(path, "rb") as fin:
             self._data = pickle.load(fin)
-
-        with open(labels_mapping_path, "rb") as fin:
-            self._labels_mapping = pickle.load(fin)
 
         self._transforms = Compose([
             Resize(load_size),
@@ -22,7 +19,9 @@ class SignDataset(data.Dataset):
         return self._transforms(image)
 
     def get_class(self, item):
-        return self._labels_mapping[self._data[item]["label"]]
+        associated_label = self._data[item]["associated_label"]
+        temporary = self._data[item]["temporary"]
+        return [associated_label, temporary]
 
     def __len__(self):
         return len(self._data)
@@ -39,6 +38,3 @@ class SignImagesDataset(SignDataset):
 class SignTargetsDataset(SignDataset):
     def __getitem__(self, item):
         return self.get_class(item)
-
-    def get_class_count(self):
-        return len(self._labels_mapping)

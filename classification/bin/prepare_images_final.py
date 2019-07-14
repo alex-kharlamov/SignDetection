@@ -34,7 +34,6 @@ def crop_image(image, bbox):
 
 def extract_annotations(data_path, annotation):
     result = []
-    assert annotation["filename"] is not None
     image = load_img(os.path.join(data_path, annotation["filename"]))
 
     bboxes = annotation["ann"]["bboxes"]
@@ -50,7 +49,7 @@ def extract_annotations(data_path, annotation):
 
         data = {
             "bbox": bbox,
-            "temporary": temporary,
+            "temporary": int(temporary),
             "associated_label": associated_label_id,
             "cropped_image": crop_image(image, bbox)
         }

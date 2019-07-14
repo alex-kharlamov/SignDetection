@@ -6,7 +6,8 @@ import torch.nn as nn
 from torchvision.models.resnet import resnet34
 from torchvision.transforms import ToTensor, Normalize, Compose, RandomAffine
 
-from .base import ConfigSignBase, PredictConfigSignBase, NUM_CLASSES
+from .base import ConfigSignBase, PredictConfigSignBase
+from sign_pipeline.associated import AVAILABLE_CLASSES
 
 MODEL_SAVE_PATH = "models/sign_resnet34"
 BATCH_SIZE = 128
@@ -19,7 +20,7 @@ torch.random.manual_seed(SEED)
 
 def get_model():
     model = resnet34(pretrained=True)
-    model.fc = nn.Linear(model.fc.in_features, NUM_CLASSES)
+    model.fc = nn.Linear(model.fc.in_features, len(AVAILABLE_CLASSES) + 2)
     return model
 
 
@@ -44,7 +45,7 @@ class Config(ConfigSignBase):
             batch_size=BATCH_SIZE,
             train_transforms=train_transforms,
             val_transforms=val_transforms,
-            mixup_alpha=0.5)
+            mixup_alpha=0.0)
 
 
 class PredictConfig(PredictConfigSignBase):
