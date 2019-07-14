@@ -20,7 +20,7 @@ class SignDataset(data.Dataset):
 
     def get_class(self, item):
         associated_label = self._data[item]["associated_label"]
-        temporary = self._data[item]["temporary"]
+        temporary = float(self._data[item]["temporary"])
         return [associated_label, temporary]
 
     def __len__(self):
