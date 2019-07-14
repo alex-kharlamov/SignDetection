@@ -34,6 +34,7 @@ def crop_image(image, bbox):
 
 def extract_annotations(data_path, annotation):
     result = []
+    assert annotation["filename"] is not None
     image = load_img(os.path.join(data_path, annotation["filename"]))
 
     bboxes = annotation["ann"]["bboxes"]
