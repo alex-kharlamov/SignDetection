@@ -10,6 +10,7 @@ CLASSIFICATOR_CONFIG = "sign_pipeline.configs.resnet34.py"
 CLASSIFICATOR_PREDICTIONS_FOLDER = "/root/SignDetection/classification/bin/models/sign_resnet34/predictions"
 
 MMDETECTION_BINARY_PATH = "/root/mmsetection_pnm/tools/test.py"
+MMDETECTION_DIST_BINARY_PATH = "/root/mmsetection_pnm/tools/dist_test.sh"
 MMDETECTION_CONFIG_PATH = "/root/fp16_cascade_rcnn_50_sk_fit_predict_085.py"
 MMDETECTION_CHECKPOINT_PATH = "/root/our_data/916_fp16_cascade_rcnn_x50_32x4d_fpn_1x_fit_85_epoch_27.pth"
 
@@ -35,13 +36,21 @@ def main():
         str(SKIP_FRAMES_NUM)])
 
     print("Running mmdet...")
-    subprocess.check_call([
-        "python3",
-        MMDETECTION_BINARY_PATH,
-        MMDETECTION_CONFIG_PATH,
-        MMDETECTION_CHECKPOINT_PATH,
-        "--out",
-        os.path.join(TMP_PATH, "detector_output.pickle")])
+    if False:
+        subprocess.check_call([
+            "python3",
+            MMDETECTION_BINARY_PATH,
+            MMDETECTION_CONFIG_PATH,
+            MMDETECTION_CHECKPOINT_PATH,
+            "--out",
+            os.path.join(TMP_PATH, "detector_output.pickle")])
+    else:
+        subprocess.check_call([
+            MMDETECTION_DIST_BINARY_PATH,
+            MMDETECTION_CONFIG_PATH,
+            MMDETECTION_CHECKPOINT_PATH,
+            "2",
+            os.path.join(TMP_PATH, "detector_output.pickle")])
 
 
     print("Running filter_predictions.py...")
