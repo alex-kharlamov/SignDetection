@@ -9,9 +9,9 @@ SKIP_FRAMES_NUM = 1
 CLASSIFICATOR_CONFIG = "/root/SignDetection/classification/sign_pipeline/configs/resnet34.py"
 CLASSIFICATOR_PREDICTIONS_FOLDER = "/root/SignDetection/classification/models/resnet34/predictions"
 
-MMDETECTION_BINARY_PATH = "/root/mmdetection/tools/test.py"
-MMDETECTION_CONFIG_PATH = ""
-MMDETECTION_CHECKPOINT_PATH = ""
+MMDETECTION_BINARY_PATH = "/root/mmsetection_pnm/tools/test.py"
+MMDETECTION_CONFIG_PATH = "/root/fp16_101_full_annotations_predict.py"
+MMDETECTION_CHECKPOINT_PATH = "/root/our_data/epoch_42.pth"
 
 
 def main():
