@@ -27,6 +27,7 @@ BIG_CROP_PADDING = 20
 TEMPORARY_THRESHOLD = 1000 # TODO CHANGE IT
 ASSOCIATED_THRESHOLD = 1000  # TODO CHANGE IT
 NUM_WORKERS = 4
+POINTS = 2
 
 
 def histeq(image):
@@ -368,7 +369,7 @@ def write_submit(submit_path, selected_filenames, final_boxes):
     with open(ALL_CLASSES_PATH) as f:
         all_pos_classes = f.read().split()
 
-    convert_class = lambda x: '.'.join(str(x).split('.')[:2])
+    convert_class = lambda x: '.'.join(str(x).split('.')[:POINTS])
 
     all_pos_classes = [convert_class(sign) for sign in all_pos_classes]
 
