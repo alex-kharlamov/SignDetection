@@ -3,6 +3,20 @@ import random
 import numpy as np
 
 
+def _mixup(elem1, elem2, coeff):
+    if isinstance(elem1, (tuple, list)):
+        result = []
+        for inner_elem1, inner_elem2 in zip(elem1, elem2):
+            result.append(_mixup(inner_elem1, inner_elem2, coeff))
+
+        if isinstance(elem1, tuple):
+            result = tuple(result)
+
+        return result
+    else:
+        return elem1 * coeff + elem2 * (1 - coeff)
+
+
 class MixUpDatasetWrapper(data.Dataset):
     def __init__(self, dataset, alpha=1):
         super().__init__()
@@ -18,8 +32,4 @@ class MixUpDatasetWrapper(data.Dataset):
 
         coeff = np.random.beta(self._alpha, self._alpha)
 
-        result = []
-        for elem1, elem2 in zip(first, second):
-            result.append(elem1 * coeff + elem2 * (1 - coeff))
-
-        return tuple(result)
+        return _mixup(first, second, coeff)

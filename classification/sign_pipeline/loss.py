@@ -3,12 +3,31 @@ import torch.nn as nn
 from sklearn.metrics import accuracy_score
 
 from pipeline.metrics.base import MetricsCalculatorBase
+from pipeline.losses.vector_cross_entropy import VectorCrossEntropy
 
 
 class SignLoss(nn.Module):
     def __init__(self, binary_weight=1.0):
         super().__init__()
         self._multi = nn.CrossEntropyLoss()
+        self._binary = nn.BCEWithLogitsLoss()
+        self._binary_weight = binary_weight
+
+    def forward(self, y_pred, y_true):
+        multi_pred = y_pred[:, :-1]
+        binary_pred = y_pred[:, -1]
+
+        multi_true = y_true[0]
+        binary_true = y_true[1].float()
+
+        loss = self._multi(multi_pred, multi_true) + self._binary_weight * self._binary(binary_pred, binary_true)
+        return loss
+
+
+class SignLossMixup(nn.Module):
+    def __init__(self, binary_weight=1.0):
+        super().__init__()
+        self._multi = VectorCrossEntropy()
         self._binary = nn.BCEWithLogitsLoss()
         self._binary_weight = binary_weight
 

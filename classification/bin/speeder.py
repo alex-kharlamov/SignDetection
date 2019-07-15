@@ -29,7 +29,6 @@ ASSOCIATED_THRESHOLD = 0.01  # TODO CHANGE IT
 NUM_WORKERS = 4
 POINTS = 2
 
-
 def histeq(image):
     reshaped = image.reshape((image.shape[0] * image.shape[1], 3)).astype("float32")
     y = (reshaped[:, 0] * 1 + reshaped[:, 1] * 1 + reshaped[:, 2] * 2) / 4

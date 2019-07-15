@@ -9,7 +9,8 @@ from pipeline.predictors.classification import PredictorClassification
 from pipeline.schedulers.learning_rate.reduce_on_plateau import SchedulerWrapperLossOnPlateau
 from pipeline.trainers.classification import TrainerClassification
 from sign_pipeline.dataset import SignImagesDataset, SignTargetsDataset
-from sign_pipeline.loss import SignLoss, SignMetricsCalculator
+from sign_pipeline.loss import SignLoss, SignMetricsCalculator, SignLossMixup
+from sign_pipeline.associated import AVAILABLE_CLASSES
 
 TRAIN_DATASET_PATH = "/Vol1/dbstore/datasets/multimodal/iceblood/data_pnm/classification_ann_train"
 
@@ -35,10 +36,7 @@ def get_dataset(path, transforms, train, use_mixup):
         SignImagesDataset(path=path, load_size=load_size, crop_size=crop_size),
         transforms)
 
-    targets_dataset = SignTargetsDataset(path=path, load_size=load_size, crop_size=crop_size)
-    if use_mixup:
-        assert False # TODO DO NOT WORK!!!
-        targets_dataset = OneHotTargetsDataset(targets_dataset, targets_dataset.get_class_count())
+    targets_dataset = SignTargetsDataset(path=path, load_size=load_size, crop_size=crop_size, use_mixup=use_mixup)
 
     return DatasetComposer([images_dataset, targets_dataset])
 
@@ -78,7 +76,7 @@ class ConfigSignBase(ConfigBase):
 
         if mixup_alpha > 0:
             train_dataset = MixUpDatasetWrapper(train_dataset, alpha=mixup_alpha)
-            loss = VectorCrossEntropy()
+            loss = SignLossMixup()
 
         super().__init__(
             model=model,
