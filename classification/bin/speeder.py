@@ -113,7 +113,7 @@ class ImageFilelist(data.Dataset):
         impath = self.imlist[index]
         target = 0
         # img = self.loader(os.path.join(self.images_data_path, impath))
-        if False:
+        if True:
             arr_img = cv2.imread(impath)
         else:
             arr_img = load_img(impath)
