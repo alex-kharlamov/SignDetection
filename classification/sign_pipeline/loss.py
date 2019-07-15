@@ -55,7 +55,8 @@ class SignMetricsCalculator(MetricsCalculatorBase):
 
     def add(self, y_predicted, y_true):
         self._predictions.append(y_predicted.cpu().data.numpy())
-        self._true_labels_multi.append(y_true[0].cpu().data.numpy())
+        y_true_multi = y_true[0] if len(y_true[0].shape) == 1 else y_true[0].argmax(-1)
+        self._true_labels_multi.append(y_true_multi.cpu().data.numpy())
         self._true_labels_binary.append(y_true[1].cpu().data.numpy())
 
     def calculate(self):
