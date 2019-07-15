@@ -48,7 +48,7 @@ def load_img(path):
     img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
     img = cv2.cvtColor(img, cv2.COLOR_BAYER_RG2RGB)
     img = histeq(img)
-    return Image.fromarray(img)
+    return img
 
 
 def hw_to_min_max(box):
@@ -113,7 +113,10 @@ class ImageFilelist(data.Dataset):
         impath = self.imlist[index]
         target = 0
         # img = self.loader(os.path.join(self.images_data_path, impath))
-        arr_img = cv2.imread(os.path.join(impath))
+        if False:
+            arr_img = cv2.imread(impath)
+        else:
+            arr_img = load_img(impath)
         arr_img = cv2.cvtColor(arr_img, cv2.COLOR_BGR2GRAY)
 
         # arr_img = np.array(img.convert('RGB'))

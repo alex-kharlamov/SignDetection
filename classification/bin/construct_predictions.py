@@ -22,6 +22,9 @@ def main():
         prediction = prediction.cpu()
 
         prediction_multi = prediction[:-1]
+
+        prediction_multi = torch.softmax(prediction_multi, dim=-1)
+
         prediction_binary = prediction[-1]
 
         label_multi = prediction_multi.argmax()
