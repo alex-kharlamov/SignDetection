@@ -11,7 +11,7 @@ import subprocess
 import argparse
 
 
-IMGS_STORED = 1000
+IMGS_STORED = 3000
 work_dir = 'work_dir/'
 COPER_FOLDER = 2
 PARALLEL_COPY_WORKERS = 4
@@ -76,8 +76,8 @@ def set_predicted(cur_fold):
         f.write('predicted')
 
 def _background_inderence_folder(folder):
-    #process = subprocess.Popen(["python3", "predict_sequence.py", folder])
-    process = subprocess.Popen(["sleep", "10"])
+    process = subprocess.Popen(["python3", "predict_sequence.py", folder])
+    #process = subprocess.Popen(["sleep", "10"])
     return process
 
 def check_process(process):
@@ -98,6 +98,7 @@ def get_prediction(cur_fold):
 folders = [work_dir + str(worker) for worker in range(COPER_FOLDER)]
 for cur_fold in folders:
     os.makedirs(cur_fold, exist_ok=True)
+    clean_dir(cur_fold)
     
 pred_status = dict()
 now_predicting = False
