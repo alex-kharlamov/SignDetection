@@ -390,6 +390,8 @@ def write_submit(submit_path, selected_filenames, final_boxes):
             for bbox, class_id, temporary, associated_class_id in final_boxes[ind]:
                 class_id = int(class_id)
                 class_name = all_pos_classes[class_id]
+                if class_id == len(all_pos_classes) - 1:
+                    continue
                 bbox = hw_to_min_max(bbox)
                 bbox = list(map(lambda x: str(int(x)), bbox))
                 temporary = "true" if temporary == 1 else "false"
