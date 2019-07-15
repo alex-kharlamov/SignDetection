@@ -5,13 +5,13 @@ import shutil
 
 TMP_PATH = "/root/SignDetection/classification/bin/tmp_folder"
 TEST_PICKLE_PATH = "/root/SignDetection/classification/bin/tmp_folder/test.pickle"
-SKIP_FRAMES_NUM = 4
+SKIP_FRAMES_NUM = 8
 CLASSIFICATOR_CONFIG = "sign_pipeline.configs.resnet34.py"
 CLASSIFICATOR_PREDICTIONS_FOLDER = "/root/SignDetection/classification/bin/models/sign_resnet34/predictions"
 
 MMDETECTION_BINARY_PATH = "/root/mmsetection_pnm/tools/test.py"
 MMDETECTION_CONFIG_PATH = "/root/fp16_cascade_rcnn_50_sk_fit_predict_085.py"
-MMDETECTION_CHECKPOINT_PATH = "/root/our_data/916_fp16_cascade_rcnn_x50_32x4d_fpn_1x_fit_85_epoch_27.pth"
+MMDETECTION_CHECKPOINT_PATH = "/root/our_data/sota_fp16_cascade_rcnn_x50_32x4d_fpn_1x_fit_epoch_31.pth"
 
 
 def main():
