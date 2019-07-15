@@ -66,7 +66,7 @@ class ConfigSignBase(ConfigBase):
                 lr=1e-4)
 
         if scheduler is None:
-            scheduler = SchedulerWrapperLossOnPlateau(optimizer, patience=2)
+            scheduler = SchedulerWrapperLossOnPlateau(optimizer, patience=2, min_lr=1e-6)
         loss = SignLoss()
         metrics_calculator = SignMetricsCalculator()
         trainer_cls = TrainerClassification
@@ -99,13 +99,16 @@ class ConfigSignBase(ConfigBase):
 
 
 class PredictConfigSignBase(PredictConfigBase):
-    def __init__(self, model, model_save_path, num_workers=4, batch_size=128):
+    def __init__(self, model, model_save_path, num_workers=4, batch_size=128, transforms=None):
         predictor_cls = PredictorClassification
+
+        if transforms is None:
+            transforms = Compose([ToTensor(), Normalize((0.5, 0.5, 0.5), (0.2, 0.2, 0.2))])
 
         images_dataset = DatasetWithPostprocessingFunc(
             SignImagesDataset(path=TEST_DATASET_PATH,
                               load_size=TEST_LOAD_SIZE, crop_size=TEST_CROP_SIZE),
-            Compose([ToTensor(), Normalize((0.5, 0.5, 0.5), (0.2, 0.2, 0.2))]))
+            transforms)
 
         dataset = DatasetComposer([images_dataset, list(range(len(images_dataset)))])
 
